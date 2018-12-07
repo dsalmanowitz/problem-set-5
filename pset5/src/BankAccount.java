@@ -98,13 +98,10 @@ public class BankAccount {
 			return 0;
 		} else if (amount <= 0) {
 			return 1;
-		} else if () {
-			return 2;
-		} else {
+		}  else {
 			this.balance -= amount;
 			bankaccount.balance += amount;
-			return 3;
+			return 2;
 		}
-		database.updateAccount(bankaccount, null);
 	}
 }
