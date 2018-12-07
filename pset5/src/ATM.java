@@ -19,13 +19,8 @@ public class ATM {
 	BankAccount account;
 	private Database database;
 	
-	ATM(BankAccount account) {
-		this.account = account;
-	}
-	
 	public void start() throws IOException {
 		System.out.println("What would you like to do?\n1. Open Account\n2. Login\n3. Quit");
-		
 		boolean repeat = false;
 		do {
 			int m = in.nextInt();
@@ -34,11 +29,21 @@ public class ATM {
 			case 1 :
 				System.out.println("What is your PIN?");
 				int pin = in.nextInt();
+				while (Integer.toString(pin).length() != 4) {
+					System.out.println("Invalid PIN number. Please try again.");
+					pin = in.nextInt();
+				}
 				in.nextLine();
 				System.out.println("What is your first name?");
 				String fname = in.nextLine();
+				if (fname.length() > 15) {
+					fname = fname.substring(0, 15);
+				}
 				System.out.println("What is your last name?");
 				String lname = in.nextLine();
+				if (lname.length() > 20) {
+					lname = lname.substring(0, 20);
+				}
 				System.out.println("What is your date of birth (YYYYMMDD)?");
 				int dob = in.nextInt();
 				in.nextLine();
@@ -54,7 +59,7 @@ public class ATM {
 				System.out.println("What is your postal code?");
 				String postalCode = in.nextLine();
 				User user = new User(pin, fname, lname, dob, phone, address, city, state, postalCode);
-				BankAccount account = new BankAccount(0.00, database.getMaxAccountNumber()+1, user, 'Y');
+				account = new BankAccount(0.00, database.getMaxAccountNumber()+1, user, 'Y');
 				database.updateAccount(account, null);
 				menu();
 				repeat = false;
@@ -66,6 +71,7 @@ public class ATM {
 				System.out.println("What is your PIN?");
 				pin = in.nextInt();
 				in.nextLine();
+				account = database.getAccount(acc);
 				if (pin == this.account.getUser().getPIN() && acc == this.account.getAccountNumber()) {
 					menu();
 				} else {
@@ -127,6 +133,8 @@ public class ATM {
 				long tAccountNumber = in.nextLong();
 				in.nextLine();
 				
+				if (database.getAccount(tAccountNumber) != null) {
+					
 				switch (this.account.transfer(t, database.getAccount(tAccountNumber))) {
 					case 0 :
 						System.out.println("Cannot transfer more than balance.");
@@ -134,9 +142,11 @@ public class ATM {
 					case 1 :
 						System.out.println("Cannot transfer non-positive number.");
 						break;
-					case 3 : System.out.println("Transaction complete.");
+					case 2 : System.out.println("Transaction complete.");
 					database.updateAccount(account, database.getAccount(tAccountNumber));
 					break;
+				}} else {
+					System.out.println("Invalid account number.");
 				}
 			case 5 : 
 				System.out.println("Account Number: " + account.getAccountNumber() + "\nName: " + account.getUser().getLName() + ", " + account.getUser().getFName() + "\nDOB: " + account.getUser().getDOB() + "\nAddress: " + account.getUser().getAddress() + " " + account.getUser().getCity() + ", " + account.getUser().getState() + " " + account.getUser().getPostalCode());
