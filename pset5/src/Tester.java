@@ -1,7 +1,7 @@
 /**
  * This class has only one responsibility: start the ATM program!
  */
-
+import java.io.*;
 public class Tester {
 	
 	/**
@@ -10,11 +10,10 @@ public class Tester {
 	 * @param args
 	 */
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		
-		ATM atm = new ATM(new BankAccount(account));
+		ATM atm = new ATM();
 		atm.start();
-		
 	}
 		/*
 		 * Rather than hard coding one or more BankAccount objects, you'll need to read them in
